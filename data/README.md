@@ -70,6 +70,20 @@ cheonan_weather_2024-01.csv
 
 원본 XLSX의 SHA-256은 `54B736042A5D408B4FB03FA734574D1D2FCA1D238E30E35681EBCC2D4EA181EC`이다. 24시간 전체가 0인 행은 자동 삭제하지 않고 이후 EDA에서 실제 저교통량인지 센서 누락인지 확인한다.
 
+## 모델링 대상 데이터
+
+관측 연속성과 생활권 대표성을 확인하여 12개 교차로와 44개 접근로를 선정했다.
+
+| 파일 | 내용 | 행 수 |
+|---|---|---:|
+| `interim/cheonan_traffic_wide_2024-01_2026-08.csv` | 32개월 전체 병합 데이터 | 221,922 |
+| `processed/intersection_continuity.csv` | 교차로별 연속성·품질 지표 | 72 |
+| `processed/approach_continuity.csv` | 접근로별 연속성·품질 지표 | 243 |
+| `processed/selected_traffic_wide.csv` | 선정 교차로 와이드 데이터 | 42,856 |
+| `processed/selected_traffic_long.csv` | 선정 교차로 시간별 롱 데이터 | 1,028,544 |
+
+선정 목록과 근거는 `config/selected_intersections.csv`와 `docs/intersection_selection.md`에 기록한다.
+
 ## 공식 출처
 
 - 천안시 스마트교차로 교통량: https://www.data.go.kr/data/15160141/fileData.do
