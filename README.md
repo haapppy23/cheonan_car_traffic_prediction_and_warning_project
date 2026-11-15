@@ -25,7 +25,7 @@
 월별 원본 파일
 → 원본 구조와 품질 검사
 → 와이드 형식을 시간당 한 행의 롱 형식으로 변환
-→ EDA와 사용할 교차로 선정
+→ 사용할 교차로 선정과 EDA
 → 시간·과거 교통량·날씨 입력 변수 생성
 → 시간순 학습·검증·시험 데이터 구성
 → 단순 기준과 여러 후보 모델 비교
@@ -58,10 +58,12 @@ docs/                 데이터·실험 설계와 담당자 설명서
 - 와이드 데이터를 시간당 한 행의 롱 형식으로 변환
 - 전체 자료 병합과 교차로·접근로 관측 연속성 계산
 - 4개 생활권의 모델링 대상 교차로 12개 선정
-- 전처리 자동 테스트
+- 선정 자료 1,028,544행의 EDA와 품질 플래그 생성
+- 생활권·시간대·요일·월별 패턴과 교차로별 0값 분석
+- 전처리와 EDA 자동 테스트
 - 데이터·실험 설계 문서와 데이터/ML 담당자 설명서
 
-아직 EDA 완료, 입력 변수 생성, 모델 학습, FastAPI와 Streamlit 구현은 수행하지 않았다.
+아직 입력 변수 생성, 모델 학습, FastAPI와 Streamlit 구현은 수행하지 않았다.
 
 ## 설치
 
@@ -83,6 +85,12 @@ python src/data/inspect_raw.py --input data/sample/cheonan_traffic_wide_sample.c
 
 ```bash
 python src/data/wide_to_long.py --input data/sample/cheonan_traffic_wide_sample.csv --output data/interim/cheonan_traffic_long_sample.csv
+```
+
+선정된 실제 자료의 EDA 보고서와 그래프를 다시 생성한다.
+
+```bash
+python src/data/run_eda.py
 ```
 
 자동 테스트를 실행한다.
@@ -113,4 +121,4 @@ python src/data/inspect_raw.py --input 원본.xlsx --date-column 날짜 --inters
 
 ## 다음 단계
 
-2024년 1월 실제 교통량 자료 한 달치를 확보한 뒤 `inspect_raw.py`로 실제 열 이름과 품질을 확인한다. 그 결과에 맞춰 열 매핑을 명시하고 동일한 전처리 코드로 롱 형식 변환을 검증한다.
+24시간 전체가 0인 접근로·날짜를 학습에서 제외할 수 있도록 품질 플래그를 이어받는다. 그 뒤 시간·요일과 과거 1·2·24·168시간 교통량 등 미래 정보를 사용하지 않는 입력 변수를 생성하고, 시간순 학습·검증·시험 데이터로 단순 기준부터 비교한다.
