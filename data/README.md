@@ -35,9 +35,29 @@
 월별 원본은 데이터 종류와 기간을 포함한다.
 
 ```text
-cheonan_traffic_2024_01.xlsx
-cheonan_weather_2024_01.csv
+cheonan_smart_intersection_traffic_2024-01.xlsx
+cheonan_weather_2024-01.csv
 ```
+
+## 확보한 실제 데이터
+
+2026년 11월 15일 천안교통정보센터에서 2024년 1월 전체 교차로 자료를 내려받아 구조와 기본 품질을 확인했다.
+
+| 항목 | 확인 결과 |
+|---|---|
+| 원본 파일 | `raw/cheonan_smart_intersection_traffic_2024-01.xlsx` |
+| 관측 기간 | 2024-01-01~2024-01-31 |
+| 원본 크기 | 6,262행, 28열 |
+| 교차로 | 61개 |
+| 교차로·접근로 조합 | 202개 |
+| 중복 키 | 0행 |
+| 결측값 | 0개 |
+| 음수 교통량 | 0개 |
+| 0 교통량 | 6,463개 셀 |
+| 24시간 전체 0 | 1행 |
+| 변환 결과 | `interim/cheonan_smart_intersection_traffic_2024-01_long.csv`, 150,288행 |
+
+원본 XLSX의 SHA-256은 `54B736042A5D408B4FB03FA734574D1D2FCA1D238E30E35681EBCC2D4EA181EC`이다. 24시간 전체가 0인 행은 자동 삭제하지 않고 이후 EDA에서 실제 저교통량인지 센서 누락인지 확인한다.
 
 ## 공식 출처
 
