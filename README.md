@@ -64,10 +64,11 @@ docs/                 데이터·실험 설계와 담당자 설명서
 - 예측 대상 시각 기준의 학습·검증·시험 분할
 - 학습 구간만 사용한 접근로별 고교통량 기준 생성
 - 검증 구간의 지속성·전날·전주 단순 기준 비교
+- 고정 Ridge 회귀 학습과 단순 기준 대비 검증
 - 전처리·EDA·입력 변수 자동 테스트
 - 데이터·실험 설계 문서와 데이터/ML 담당자 설명서
 
-아직 모델 학습, FastAPI와 Streamlit 구현은 수행하지 않았다.
+아직 트리 기반 후보 모델 학습, 최종 모델 선정, FastAPI와 Streamlit 구현은 수행하지 않았다.
 
 ## 설치
 
@@ -109,6 +110,12 @@ python src/features/build_features.py
 python src/evaluation/run_baselines.py
 ```
 
+고정 Ridge 회귀를 학습하고 단순 기준과 비교한다.
+
+```bash
+python src/models/train_ridge.py
+```
+
 자동 테스트를 실행한다.
 
 ```bash
@@ -137,4 +144,4 @@ python src/data/inspect_raw.py --input 원본.xlsx --date-column 날짜 --inters
 
 ## 다음 단계
 
-같은 학습·검증 행으로 Ridge를 학습한다. 검증 MAE·WAPE는 전주 같은 시간 기준보다, RMSE는 지속성 기준보다 개선되는지 확인한다.
+같은 학습·검증 행으로 첫 트리 기반 후보를 학습한다. Ridge의 검증 MAE 62.43대, WAPE 10.66%, RMSE 111.58대를 새 기준점으로 사용한다.
