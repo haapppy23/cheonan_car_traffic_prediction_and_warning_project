@@ -66,10 +66,11 @@ docs/                 데이터·실험 설계와 담당자 설명서
 - 검증 구간의 지속성·전날·전주 단순 기준 비교
 - 고정 Ridge 회귀 학습과 단순 기준 대비 검증
 - 고정 HistGradientBoosting 학습과 Ridge 대비 검증
+- 접근로별 기준을 적용한 고교통량 경보 지표 검증
 - 전처리·EDA·입력 변수 자동 테스트
 - 데이터·실험 설계 문서와 데이터/ML 담당자 설명서
 
-아직 다른 후보 모델과 고교통량 경보 성능 비교, 최종 모델 선정, FastAPI와 Streamlit 구현은 수행하지 않았다.
+아직 다른 후보 모델과 세부 오류 분석, 최종 모델 선정, FastAPI와 Streamlit 구현은 수행하지 않았다.
 
 ## 설치
 
@@ -123,6 +124,12 @@ python src/models/train_ridge.py
 python src/models/train_hist_gradient_boosting.py
 ```
 
+최고 회귀 모델의 고교통량 경보 성능을 평가한다.
+
+```bash
+python src/evaluation/run_high_traffic_alerts.py
+```
+
 자동 테스트를 실행한다.
 
 ```bash
@@ -151,4 +158,4 @@ python src/data/inspect_raw.py --input 원본.xlsx --date-column 날짜 --inters
 
 ## 다음 단계
 
-현재 가장 좋은 HistGradientBoosting 예측으로 고교통량 경보의 Precision·Recall·F1·PR-AUC를 계산한다. 회귀 기준점은 검증 MAE 40.78대, WAPE 6.96%, RMSE 81.07대이다.
+현재 최고 모델의 교차로·시간대별 회귀 오차와 놓친 고교통량 사례를 분석한다. 경보 기준점은 Precision 0.815, Recall 0.680, F1 0.742, PR-AUC 0.815이다.

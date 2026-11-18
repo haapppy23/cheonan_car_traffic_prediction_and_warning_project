@@ -8,3 +8,4 @@
 - `baseline_results.md`: 시험 구간을 제외한 단순 기준 검증 결과
 - `ridge_results.md`: Ridge와 단순 기준의 검증 성능 비교
 - `hist_gradient_boosting_results.md`: 첫 트리 기반 후보와 Ridge 비교
+- `high_traffic_alert_results.md`: 최고 회귀 모델의 고교통량 경보 지표

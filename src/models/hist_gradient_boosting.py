@@ -2,7 +2,12 @@
 
 from __future__ import annotations
 
+import os
 import warnings
+
+os.environ.setdefault(
+    "LOKY_MAX_CPU_COUNT", str(max(1, (os.cpu_count() or 2) - 1))
+)
 
 import numpy as np
 import pandas as pd
@@ -112,9 +117,15 @@ class HistGradientBoostingTrafficModel:
 
     def predict_raw(self, features: pd.DataFrame) -> np.ndarray:
         validate_model_features(features)
-        return np.asarray(
-            self.pipeline.predict(features[MODEL_FEATURES]), dtype="float64"
-        )
+        with warnings.catch_warnings():
+            warnings.filterwarnings(
+                "ignore",
+                message="Could not find the number of physical cores",
+                category=UserWarning,
+                module=r"joblib\.externals\.loky\.backend\.context",
+            )
+            prediction = self.pipeline.predict(features[MODEL_FEATURES])
+        return np.asarray(prediction, dtype="float64")
 
     def predict(self, features: pd.DataFrame) -> np.ndarray:
         return np.maximum(self.predict_raw(features), 0.0)
