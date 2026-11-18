@@ -63,6 +63,7 @@ docs/                 데이터·실험 설계와 담당자 설명서
 - 과거 교통량·시간 특성·이동 통계 입력 변수 생성
 - 예측 대상 시각 기준의 학습·검증·시험 분할
 - 학습 구간만 사용한 접근로별 고교통량 기준 생성
+- 검증 구간의 지속성·전날·전주 단순 기준 비교
 - 전처리·EDA·입력 변수 자동 테스트
 - 데이터·실험 설계 문서와 데이터/ML 담당자 설명서
 
@@ -102,6 +103,12 @@ python src/data/run_eda.py
 python src/features/build_features.py
 ```
 
+시험 구간을 열지 않고 검증 구간의 단순 기준을 평가한다.
+
+```bash
+python src/evaluation/run_baselines.py
+```
+
 자동 테스트를 실행한다.
 
 ```bash
@@ -130,4 +137,4 @@ python src/data/inspect_raw.py --input 원본.xlsx --date-column 날짜 --inters
 
 ## 다음 단계
 
-공통 입력 데이터의 `is_model_ready=True` 행을 사용해 지속성·일간·주간 단순 기준의 MAE·WAPE·RMSE를 계산한다. 그 뒤 같은 시간순 분할로 Ridge를 학습해 단순 기준보다 개선되는지 확인한다.
+같은 학습·검증 행으로 Ridge를 학습한다. 검증 MAE·WAPE는 전주 같은 시간 기준보다, RMSE는 지속성 기준보다 개선되는지 확인한다.
