@@ -82,9 +82,12 @@ cheonan_weather_2024-01.csv
 | `processed/selected_traffic_wide.csv` | 선정 교차로 와이드 데이터 | 42,856 |
 | `processed/selected_traffic_long.csv` | 선정 교차로 시간별 롱 데이터 | 1,028,544 |
 | `processed/eda/` | EDA 요약표와 재현용 수치 | 코드 실행 시 생성 |
+| `processed/features/model_features.parquet` | 입력 변수·정답·시간순 분할 | 1,028,544 |
+| `processed/features/high_traffic_thresholds.csv` | 접근로별 학습 구간 90백분위수 | 44 |
 
 선정 목록과 근거는 `config/selected_intersections.csv`와 `docs/intersection_selection.md`에 기록한다.
 EDA 결과와 그래프는 `docs/eda_report.md`에 기록하며 `python src/data/run_eda.py`로 다시 생성한다.
+입력 변수 생성 결과는 `docs/feature_dataset.md`에 기록하며 `python src/features/build_features.py`로 다시 생성한다.
 
 ## 공식 출처
 

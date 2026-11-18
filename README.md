@@ -60,10 +60,13 @@ docs/                 데이터·실험 설계와 담당자 설명서
 - 4개 생활권의 모델링 대상 교차로 12개 선정
 - 선정 자료 1,028,544행의 EDA와 품질 플래그 생성
 - 생활권·시간대·요일·월별 패턴과 교차로별 0값 분석
-- 전처리와 EDA 자동 테스트
+- 과거 교통량·시간 특성·이동 통계 입력 변수 생성
+- 예측 대상 시각 기준의 학습·검증·시험 분할
+- 학습 구간만 사용한 접근로별 고교통량 기준 생성
+- 전처리·EDA·입력 변수 자동 테스트
 - 데이터·실험 설계 문서와 데이터/ML 담당자 설명서
 
-아직 입력 변수 생성, 모델 학습, FastAPI와 Streamlit 구현은 수행하지 않았다.
+아직 모델 학습, FastAPI와 Streamlit 구현은 수행하지 않았다.
 
 ## 설치
 
@@ -91,6 +94,12 @@ python src/data/wide_to_long.py --input data/sample/cheonan_traffic_wide_sample.
 
 ```bash
 python src/data/run_eda.py
+```
+
+모델 입력 변수와 시간순 분할을 생성한다.
+
+```bash
+python src/features/build_features.py
 ```
 
 자동 테스트를 실행한다.
@@ -121,4 +130,4 @@ python src/data/inspect_raw.py --input 원본.xlsx --date-column 날짜 --inters
 
 ## 다음 단계
 
-24시간 전체가 0인 접근로·날짜를 학습에서 제외할 수 있도록 품질 플래그를 이어받는다. 그 뒤 시간·요일과 과거 1·2·24·168시간 교통량 등 미래 정보를 사용하지 않는 입력 변수를 생성하고, 시간순 학습·검증·시험 데이터로 단순 기준부터 비교한다.
+공통 입력 데이터의 `is_model_ready=True` 행을 사용해 지속성·일간·주간 단순 기준의 MAE·WAPE·RMSE를 계산한다. 그 뒤 같은 시간순 분할로 Ridge를 학습해 단순 기준보다 개선되는지 확인한다.
