@@ -67,6 +67,7 @@ docs/                 데이터·실험 설계와 담당자 설명서
 - 고정 Ridge 회귀 학습과 단순 기준 대비 검증
 - 고정 HistGradientBoosting 학습과 Ridge 대비 검증
 - 접근로별 기준을 적용한 고교통량 경보 지표 검증
+- 교차로·시간대·평일/주말 오차와 놓친 경보 분석
 - 전처리·EDA·입력 변수 자동 테스트
 - 데이터·실험 설계 문서와 데이터/ML 담당자 설명서
 
@@ -130,6 +131,12 @@ python src/models/train_hist_gradient_boosting.py
 python src/evaluation/run_high_traffic_alerts.py
 ```
 
+검증 구간의 세부 오류와 놓친 경보 사례를 분석한다.
+
+```bash
+python src/evaluation/run_error_analysis.py
+```
+
 자동 테스트를 실행한다.
 
 ```bash
@@ -158,4 +165,4 @@ python src/data/inspect_raw.py --input 원본.xlsx --date-column 날짜 --inters
 
 ## 다음 단계
 
-현재 최고 모델의 교차로·시간대별 회귀 오차와 놓친 고교통량 사례를 분석한다. 경보 기준점은 Precision 0.815, Recall 0.680, F1 0.742, PR-AUC 0.815이다.
+같은 학습·검증 데이터로 다음 후보 모델을 비교한다. 현재 기준점은 HistGradientBoosting의 MAE 40.78대이며, 운동장4와 17시 구간의 오차 및 성정중(통계청)4의 낮은 경보 Recall을 함께 확인한다.
