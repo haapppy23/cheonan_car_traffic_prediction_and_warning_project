@@ -7,3 +7,4 @@
 - `feature_dataset.md`: 누출 없는 입력 변수와 시간순 분할 생성 결과
 - `baseline_results.md`: 시험 구간을 제외한 단순 기준 검증 결과
 - `ridge_results.md`: Ridge와 단순 기준의 검증 성능 비교
+- `hist_gradient_boosting_results.md`: 첫 트리 기반 후보와 Ridge 비교

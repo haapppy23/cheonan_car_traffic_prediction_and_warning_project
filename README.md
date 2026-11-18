@@ -65,10 +65,11 @@ docs/                 데이터·실험 설계와 담당자 설명서
 - 학습 구간만 사용한 접근로별 고교통량 기준 생성
 - 검증 구간의 지속성·전날·전주 단순 기준 비교
 - 고정 Ridge 회귀 학습과 단순 기준 대비 검증
+- 고정 HistGradientBoosting 학습과 Ridge 대비 검증
 - 전처리·EDA·입력 변수 자동 테스트
 - 데이터·실험 설계 문서와 데이터/ML 담당자 설명서
 
-아직 트리 기반 후보 모델 학습, 최종 모델 선정, FastAPI와 Streamlit 구현은 수행하지 않았다.
+아직 다른 후보 모델과 고교통량 경보 성능 비교, 최종 모델 선정, FastAPI와 Streamlit 구현은 수행하지 않았다.
 
 ## 설치
 
@@ -116,6 +117,12 @@ python src/evaluation/run_baselines.py
 python src/models/train_ridge.py
 ```
 
+고정 HistGradientBoosting을 학습하고 Ridge와 비교한다.
+
+```bash
+python src/models/train_hist_gradient_boosting.py
+```
+
 자동 테스트를 실행한다.
 
 ```bash
@@ -144,4 +151,4 @@ python src/data/inspect_raw.py --input 원본.xlsx --date-column 날짜 --inters
 
 ## 다음 단계
 
-같은 학습·검증 행으로 첫 트리 기반 후보를 학습한다. Ridge의 검증 MAE 62.43대, WAPE 10.66%, RMSE 111.58대를 새 기준점으로 사용한다.
+현재 가장 좋은 HistGradientBoosting 예측으로 고교통량 경보의 Precision·Recall·F1·PR-AUC를 계산한다. 회귀 기준점은 검증 MAE 40.78대, WAPE 6.96%, RMSE 81.07대이다.

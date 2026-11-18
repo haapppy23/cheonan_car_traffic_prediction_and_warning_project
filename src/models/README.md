@@ -5,9 +5,12 @@
 - `baselines.py`: 1시간 전, 전날 같은 시간과 전주 같은 시간 교통량을 사용하는 단순 기준
 - `ridge.py`: 표준화·범주형 인코딩·비음수 보정을 포함한 Ridge 모델
 - `train_ridge.py`: 학습 구간으로 Ridge를 학습하고 검증 구간에서 단순 기준과 비교
+- `hist_gradient_boosting.py`: 범주형 인코딩과 비음수 보정을 포함한 부스팅 모델
+- `train_hist_gradient_boosting.py`: 고정 부스팅을 Ridge·단순 기준과 비교
 
 ```bash
 python src/models/train_ridge.py
+python src/models/train_hist_gradient_boosting.py
 ```
 
-트리 기반 후보 모델은 Ridge 검증이 끝난 뒤 같은 분할에 추가한다.
+다른 트리 기반 후보도 동일한 학습·검증 분할에 추가한다.
