@@ -66,12 +66,13 @@ docs/                 데이터·실험 설계와 담당자 설명서
 - 검증 구간의 지속성·전날·전주 단순 기준 비교
 - 고정 Ridge 회귀 학습과 단순 기준 대비 검증
 - 고정 HistGradientBoosting 학습과 Ridge 대비 검증
+- 계산량을 제한한 Random Forest와 기존 후보 비교
 - 접근로별 기준을 적용한 고교통량 경보 지표 검증
 - 교차로·시간대·평일/주말 오차와 놓친 경보 분석
 - 전처리·EDA·입력 변수 자동 테스트
 - 데이터·실험 설계 문서와 데이터/ML 담당자 설명서
 
-아직 다른 후보 모델과 세부 오류 분석, 최종 모델 선정, FastAPI와 Streamlit 구현은 수행하지 않았다.
+아직 Random Forest의 경보·세부 오류 분석, 최종 모델 선정, FastAPI와 Streamlit 구현은 수행하지 않았다.
 
 ## 설치
 
@@ -125,6 +126,12 @@ python src/models/train_ridge.py
 python src/models/train_hist_gradient_boosting.py
 ```
 
+계산량을 제한한 Random Forest를 기존 후보와 비교한다.
+
+```bash
+python src/models/train_random_forest.py
+```
+
 최고 회귀 모델의 고교통량 경보 성능을 평가한다.
 
 ```bash
@@ -165,4 +172,4 @@ python src/data/inspect_raw.py --input 원본.xlsx --date-column 날짜 --inters
 
 ## 다음 단계
 
-같은 학습·검증 데이터로 다음 후보 모델을 비교한다. 현재 기준점은 HistGradientBoosting의 MAE 40.78대이며, 운동장4와 17시 구간의 오차 및 성정중(통계청)4의 낮은 경보 Recall을 함께 확인한다.
+현재 회귀 성능이 가장 좋은 Random Forest의 경보 지표와 세부 오류를 계산한다. 검증 기준점은 MAE 36.00대, WAPE 6.15%, RMSE 77.73대이며 모델 크기는 약 31.6MB이다.
