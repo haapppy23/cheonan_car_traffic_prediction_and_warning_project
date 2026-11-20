@@ -37,6 +37,7 @@ def evaluate_high_traffic_alerts(
     predicted_volume: object,
     *,
     model_name: str = "hist_gradient_boosting",
+    split_name: str = "validation",
 ) -> tuple[pd.DataFrame, dict[str, int | float]]:
     required = {
         "target_volume",
@@ -72,7 +73,7 @@ def evaluate_high_traffic_alerts(
         [
             {
                 "model": model_name,
-                "split": "validation",
+                "split": split_name,
                 "rows": len(validation),
                 "actual_high_volume": int(actual_label.sum()),
                 "predicted_alerts": int(predicted_label.sum()),

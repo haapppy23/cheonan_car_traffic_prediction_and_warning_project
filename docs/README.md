@@ -13,3 +13,5 @@
 - `random_forest_results.md`: Random Forest와 기존 후보의 검증 비교
 - `random_forest_alert_results.md`: Random Forest의 고교통량 경보 지표
 - `random_forest_error_analysis.md`: Random Forest의 교차로·시간대별 오류
+- `final_test_results.md`: 최종 모델 선정 근거와 보관 시험 구간 성능
+- `model_handoff.md`: 백엔드·프론트엔드 전달용 모델 입출력 규격

@@ -9,11 +9,13 @@
 - `train_hist_gradient_boosting.py`: 고정 부스팅을 Ridge·단순 기준과 비교
 - `random_forest.py`: 범주형 정수 인코딩과 비음수 보정을 포함한 Random Forest
 - `train_random_forest.py`: 고정 Random Forest를 기존 후보와 비교
+- `finalize_random_forest.py`: 선정 모델을 학습+검증으로 재학습하고 시험 구간을 1회 평가
 
 ```bash
 python src/models/train_ridge.py
 python src/models/train_hist_gradient_boosting.py
 python src/models/train_random_forest.py
+python src/models/finalize_random_forest.py
 ```
 
 다른 트리 기반 후보도 동일한 학습·검증 분할에 추가한다.
