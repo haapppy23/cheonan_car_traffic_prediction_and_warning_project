@@ -1,0 +1,47 @@
+{
+  "model_name": "random_forest",
+  "selected_on": "2026-11-20",
+  "selection_made_before_test": true,
+  "selection_candidates": [
+    "persistence",
+    "daily_seasonal",
+    "weekly_seasonal",
+    "ridge",
+    "hist_gradient_boosting",
+    "random_forest"
+  ],
+  "not_included_without_reproducible_result": [
+    "xgboost",
+    "catboost"
+  ],
+  "parameters": {
+    "n_estimators": 12,
+    "max_depth": 18,
+    "min_samples_leaf": 10,
+    "max_features": 0.7,
+    "random_state": 42
+  },
+  "validation_metrics": {
+    "mae": 35.995214,
+    "wape": 0.061471,
+    "rmse": 77.732099,
+    "precision": 0.831288,
+    "recall": 0.720717,
+    "f1": 0.772064,
+    "pr_auc": 0.847369
+  },
+  "test_metrics": {
+    "mae": 31.457783486613994,
+    "wape": 0.052092695065646254,
+    "rmse": 55.27496744262781,
+    "precision": 0.8401371652514696,
+    "recall": 0.7274141099957585,
+    "f1": 0.7797226642418732,
+    "pr_auc": 0.8596426301109855
+  },
+  "training_rows": 895560,
+  "test_rows": 94944,
+  "artifact": "models/final_random_forest.joblib",
+  "artifact_size_bytes": 35374812,
+  "reproduce": "python src/models/finalize_random_forest.py"
+}

@@ -71,10 +71,13 @@ docs/                 데이터·실험 설계와 담당자 설명서
 - Random Forest와 HistGradientBoosting의 경보 성능 비교
 - 교차로·시간대·평일/주말 오차와 놓친 경보 분석
 - Random Forest의 교차로·시간대별 오류 분석
+- Random Forest 최종 선정과 학습+검증 재학습
+- 2026년 6~8월 보관 시험 구간 1회 평가
+- 백엔드·프론트엔드 전달용 모델 입출력 규격
 - 전처리·EDA·입력 변수 자동 테스트
 - 데이터·실험 설계 문서와 데이터/ML 담당자 설명서
 
-아직 최종 모델 선정과 시험 구간 평가, FastAPI와 Streamlit 구현은 수행하지 않았다.
+데이터·머신러닝 담당 범위는 완료했다. FastAPI와 Streamlit 구현은 각 담당자가 최종 모델 전달 규격을 사용해 진행한다.
 
 ## 설치
 
@@ -158,6 +161,12 @@ Random Forest의 세부 오류를 같은 기준으로 분석한다.
 python src/evaluation/run_error_analysis.py --model models/random_forest.joblib --model-name random_forest --output-dir data/processed/evaluation/random_forest_error_analysis --report docs/random_forest_error_analysis.md
 ```
 
+고정된 최종 모델을 재학습하고 보관 시험 구간을 평가한다.
+
+```bash
+python src/models/finalize_random_forest.py
+```
+
 자동 테스트를 실행한다.
 
 ```bash
@@ -186,4 +195,4 @@ python src/data/inspect_raw.py --input 원본.xlsx --date-column 날짜 --inters
 
 ## 다음 단계
 
-검증 성능과 서비스 비용을 근거로 최종 모델을 고정한 뒤 학습·검증 구간을 합쳐 재학습하고 시험 구간을 한 번만 평가한다.
+백엔드 담당자는 `docs/model_handoff.md`의 입력·출력 규격과 `config/final_model.json`을 사용해 FastAPI에 모델을 연결한다. 프론트엔드 담당자는 API의 예상 교통량과 고교통량 위험 출력을 화면에 표시한다.
