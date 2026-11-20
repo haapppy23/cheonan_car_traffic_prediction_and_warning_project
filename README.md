@@ -74,10 +74,12 @@ docs/                 데이터·실험 설계와 담당자 설명서
 - Random Forest 최종 선정과 학습+검증 재학습
 - 2026년 6~8월 보관 시험 구간 1회 평가
 - 백엔드·프론트엔드 전달용 모델 입출력 규격
+- FastAPI 모델·교통량 이력 1회 적재
+- 1시간 후 교통량과 고교통량 위험 예측 API
 - 전처리·EDA·입력 변수 자동 테스트
 - 데이터·실험 설계 문서와 데이터/ML 담당자 설명서
 
-데이터·머신러닝 담당 범위는 완료했다. FastAPI와 Streamlit 구현은 각 담당자가 최종 모델 전달 규격을 사용해 진행한다.
+데이터·머신러닝과 FastAPI 예측 서버까지 구현했다. Streamlit 담당자는 예측 API를 화면에 연결한다.
 
 ## 설치
 
@@ -167,6 +169,12 @@ python src/evaluation/run_error_analysis.py --model models/random_forest.joblib 
 python src/models/finalize_random_forest.py
 ```
 
+FastAPI 예측 서버를 실행한다. 요청 형식은 [backend/README.md](backend/README.md)에 정리했다.
+
+```bash
+python -m uvicorn backend.app:app --reload
+```
+
 자동 테스트를 실행한다.
 
 ```bash
@@ -195,4 +203,4 @@ python src/data/inspect_raw.py --input 원본.xlsx --date-column 날짜 --inters
 
 ## 다음 단계
 
-백엔드 담당자는 `docs/model_handoff.md`의 입력·출력 규격과 `config/final_model.json`을 사용해 FastAPI에 모델을 연결한다. 프론트엔드 담당자는 API의 예상 교통량과 고교통량 위험 출력을 화면에 표시한다.
+프론트엔드 담당자는 FastAPI의 `/predict` 응답에서 예상 교통량, 고교통량 기준과 위험 여부를 받아 Streamlit 화면에 표시한다.
