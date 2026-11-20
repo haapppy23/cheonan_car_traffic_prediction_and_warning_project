@@ -15,3 +15,4 @@
 - `random_forest_error_analysis.md`: Random Forest의 교차로·시간대별 오류
 - `final_test_results.md`: 최종 모델 선정 근거와 보관 시험 구간 성능
 - `model_handoff.md`: 백엔드·프론트엔드 전달용 모델 입출력 규격
+- `team_handoff/`: GitHub 연결법, 팀원별 AI 프롬프트와 전달문

@@ -1,0 +1,16 @@
+프로젝트 저장소 최신본 올려두었습니다.
+
+저장소
+https://github.com/haapppy23/cheonan_car_traffic_prediction_and_warning_project
+
+같은 저장소에 브랜치를 올리려면 공동작업자 초대가 필요하니 각자 GitHub 사용자명을 보내주세요. 초대가 오면 먼저 수락해 주세요.
+
+저장소를 clone하거나 기존 저장소의 main을 pull한 뒤 requirements.txt를 설치해 주세요. 모델과 실제 데이터는 Git에 올리지 않았기 때문에 천안교통_실행파일.zip을 별도로 보내겠습니다. 저장소 최상위 폴더에 압축을 풀면 됩니다.
+
+이나율 님은 docs/team_handoff/이나율_FastAPI_AI_프롬프트.md 내용을 AI에게 그대로 넣고 feat/backend-locations 브랜치에서 진행해 주세요. 기존 예측 API는 구현되어 있고, 교차로·접근로 목록 API와 테스트를 맡으면 됩니다.
+
+김문일 님은 이나율 님 작업이 main에 반영된 뒤 docs/team_handoff/김문일_Streamlit_AI_프롬프트.md 내용을 AI에게 넣고 feat/streamlit-ui 브랜치에서 진행해 주세요. 프론트엔드는 모델을 직접 불러오지 않고 FastAPI만 호출하면 됩니다.
+
+main에는 직접 push하지 말고 각자 브랜치를 push해 주세요. 완료 후 브랜치명, 커밋 해시, 테스트 결과를 보내주시면 제가 검토하고 합치겠습니다.
+
+공통 설치와 실행 방법은 docs/team_handoff/공통_시작_가이드.md에 정리해 두었습니다.

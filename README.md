@@ -197,6 +197,8 @@ python src/data/inspect_raw.py --input 원본.xlsx --date-column 날짜 --inters
 
 각 역할의 실제 기여는 작성한 코드, 문서, 테스트와 Git 커밋으로 남긴다.
 
+팀원이 저장소를 받아 작업하는 방법과 역할별 AI 프롬프트는 [docs/team_handoff/README.md](docs/team_handoff/README.md)에 정리했다.
+
 ## Git에 데이터를 올리지 않는 이유
 
 원본과 가공 데이터는 용량이 커질 수 있고 데이터 출처의 이용 조건을 확인해야 한다. 모델 파일과 API 키도 코드와 분리해야 한다. 저장소에는 작은 합성 예제, 데이터 출처, 재생성 코드와 실행 방법만 포함한다.
