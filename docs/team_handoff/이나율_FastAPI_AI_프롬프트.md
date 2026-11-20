@@ -11,6 +11,10 @@ https://github.com/haapppy23/cheonan_car_traffic_prediction_and_warning_project
 내 역할:
 이나율, FastAPI 백엔드 담당
 
+이 요청은 방법 설명이나 계획 작성 요청이 아니라 저장소에서 실제 작업을 끝내라는 요청이다. 계획만 제시하고 멈추지 말고 명령 실행, 파일 수정, 검증, 커밋과 본인 브랜치 push까지 직접 진행하라. 범위 안의 안전한 결정은 저장소 근거로 판단하고 불필요한 확인 질문을 하지 마라. 명령이 실패하면 원인을 확인하고 안전한 대안을 시도한 뒤 계속 진행하라.
+
+GitHub 로그인·권한 승인처럼 사용자가 직접 해야 하는 조치만 짧게 요청할 수 있다. 실행파일이 없어도 코드와 합성 테스트 작업은 중단하지 않는다. 원격 브랜치에서 최종 커밋이 확인되기 전에는 완료했다고 보고하지 마라.
+
 작업 전에 저장소 루트의 AGENTS.md, backend/README.md, docs/model_handoff.md, docs/team_handoff/README.md를 전부 읽어라. git status와 현재 브랜치를 확인하고, 최신 main에서 feat/backend-locations 브랜치를 만들어라. 이미 같은 브랜치가 있으면 기존 작업을 보존하고 이어서 진행하라.
 
 현재 /health와 /predict, 모델 로드, 최근 168시간 입력 변수 생성은 구현되어 있다. 기존 기능을 다시 만들거나 모델을 재학습하지 마라.
@@ -33,7 +37,7 @@ https://github.com/haapppy23/cheonan_car_traffic_prediction_and_warning_project
 
 완료 조건을 만족하면 변경 파일만 커밋하라. 커밋 메시지는 feat(api): list traffic locations 로 한다. main에는 push하지 말고 feat/backend-locations 브랜치를 origin에 push하라.
 
-마지막 보고에는 브랜치명, 커밋 해시, 테스트 개수, 실제 HTTP 확인 여부, 남은 문제를 짧게 적어라. 실행파일이 없더라도 코드와 합성 테스트는 계속 진행하고 실제 HTTP 확인만 미완료로 보고하라.
+push 후 원격 브랜치의 커밋 해시가 로컬 HEAD와 같은지 확인하라. 마지막 보고에는 브랜치명, 커밋 해시, 테스트 개수, 실제 HTTP 확인 여부, 남은 문제를 짧게 적어라. 실행파일이 없더라도 코드와 합성 테스트는 계속 진행하고 실제 HTTP 확인만 미완료로 보고하라.
 ```
 
 AI가 작업을 끝냈다고 하면 다음 내용을 직접 확인한다.
