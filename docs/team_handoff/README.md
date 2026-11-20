@@ -16,9 +16,8 @@
 - GitHub: `https://github.com/haapppy23/cheonan_car_traffic_prediction_and_warning_project`
 - 실행파일: `천안교통_실행파일.zip`
 - 공통 설치법: `공통_시작_가이드.md`
-- 이나율용: `이나율_FastAPI_AI_프롬프트.md`
-- 김문일용: `김문일_Streamlit_AI_프롬프트.md`
-- 김성현용: `김성현_통합_AI_프롬프트.md`
+- 이나율용: `이나율_프롬프트.md`
+- 김문일용: `김문일_프롬프트.md`
 - 카카오톡 전달문: `팀원에게_보낼_카톡.txt`
 
 `천안교통_실행파일.zip`에는 Git에 올리지 않는 최종 모델, 실제 교통량 이력과 고교통량 기준이 들어 있다. 저장소를 복제한 뒤 프로젝트 최상위 폴더에 압축을 풀면 원래 경로에 배치된다.
