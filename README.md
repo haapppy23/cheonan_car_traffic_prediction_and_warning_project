@@ -70,10 +70,11 @@ docs/                 데이터·실험 설계와 담당자 설명서
 - 접근로별 기준을 적용한 고교통량 경보 지표 검증
 - Random Forest와 HistGradientBoosting의 경보 성능 비교
 - 교차로·시간대·평일/주말 오차와 놓친 경보 분석
+- Random Forest의 교차로·시간대별 오류 분석
 - 전처리·EDA·입력 변수 자동 테스트
 - 데이터·실험 설계 문서와 데이터/ML 담당자 설명서
 
-아직 Random Forest의 세부 오류 분석, 최종 모델 선정, FastAPI와 Streamlit 구현은 수행하지 않았다.
+아직 최종 모델 선정과 시험 구간 평가, FastAPI와 Streamlit 구현은 수행하지 않았다.
 
 ## 설치
 
@@ -151,6 +152,12 @@ python src/evaluation/run_high_traffic_alerts.py --model models/random_forest.jo
 python src/evaluation/run_error_analysis.py
 ```
 
+Random Forest의 세부 오류를 같은 기준으로 분석한다.
+
+```bash
+python src/evaluation/run_error_analysis.py --model models/random_forest.joblib --model-name random_forest --output-dir data/processed/evaluation/random_forest_error_analysis --report docs/random_forest_error_analysis.md
+```
+
 자동 테스트를 실행한다.
 
 ```bash
@@ -179,4 +186,4 @@ python src/data/inspect_raw.py --input 원본.xlsx --date-column 날짜 --inters
 
 ## 다음 단계
 
-Random Forest의 교차로·시간대별 세부 오류를 계산한 뒤 약 31.6MB의 모델 크기와 성능 개선을 함께 검토한다. 현재 경보 기준점은 Precision 0.831, Recall 0.721, F1 0.772, PR-AUC 0.847이다.
+검증 성능과 서비스 비용을 근거로 최종 모델을 고정한 뒤 학습·검증 구간을 합쳐 재학습하고 시험 구간을 한 번만 평가한다.

@@ -12,3 +12,4 @@
 - `error_analysis.md`: 교차로·시간대별 오차와 놓친 고교통량 분석
 - `random_forest_results.md`: Random Forest와 기존 후보의 검증 비교
 - `random_forest_alert_results.md`: Random Forest의 고교통량 경보 지표
+- `random_forest_error_analysis.md`: Random Forest의 교차로·시간대별 오류

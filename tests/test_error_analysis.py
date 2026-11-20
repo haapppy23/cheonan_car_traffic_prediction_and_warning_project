@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from src.evaluation.run_error_analysis import analyze_validation_errors
+from src.evaluation.run_error_analysis import analyze_validation_errors, write_report
 
 
 class PredictionColumnModel:
@@ -62,3 +62,12 @@ def test_error_analysis_groups_intersection_metrics() -> None:
     ].iloc[0]
     assert intersection_a["rows"] == 2
     assert intersection_a["mae"] == 10
+
+
+def test_error_report_uses_selected_model_name(tmp_path) -> None:
+    tables, summary = analyze_validation_errors(
+        sample_features(), PredictionColumnModel()
+    )
+    report = tmp_path / "report.md"
+    write_report(tables, summary, report, model_name="random_forest")
+    assert report.read_text(encoding="utf-8").startswith("# Random Forest 오류 분석")

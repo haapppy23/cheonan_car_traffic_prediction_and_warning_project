@@ -16,7 +16,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from src.evaluation.metrics import regression_metrics
-from src.evaluation.run_high_traffic_alerts import evaluate_high_traffic_alerts
+from src.evaluation.run_high_traffic_alerts import MODEL_LABELS, evaluate_high_traffic_alerts
 
 
 class VolumePredictor(Protocol):
@@ -175,6 +175,8 @@ def write_report(
     tables: dict[str, pd.DataFrame],
     summary: dict[str, float | int],
     report_path: Path,
+    *,
+    model_name: str = "hist_gradient_boosting",
 ) -> None:
     report_path.parent.mkdir(parents=True, exist_ok=True)
     intersection = tables["intersection"]
@@ -197,7 +199,8 @@ def write_report(
             f"{row.high_traffic_threshold:.1f} | {row.underprediction:.1f} |"
         )
 
-    report = f"""# HistGradientBoosting 오류 분석
+    model_label = MODEL_LABELS.get(model_name, model_name)
+    report = f"""# {model_label} 오류 분석
 
 ## 분석 범위
 
@@ -255,6 +258,7 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=Path("models/hist_gradient_boosting.joblib"),
     )
+    parser.add_argument("--model-name", default="hist_gradient_boosting")
     parser.add_argument(
         "--output-dir",
         type=Path,
@@ -270,8 +274,7 @@ def main() -> int:
     args = build_parser().parse_args()
     if not args.model.exists():
         raise FileNotFoundError(
-            f"학습 모델이 없습니다: {args.model}. 먼저 "
-            "'python src/models/train_hist_gradient_boosting.py'를 실행하십시오."
+            f"학습 모델이 없습니다: {args.model}. 해당 모델 학습 명령을 먼저 실행하십시오."
         )
     features = pd.read_parquet(args.input)
     with warnings.catch_warnings():
@@ -289,7 +292,7 @@ def main() -> int:
         table.to_csv(
             args.output_dir / f"{name}.csv", index=False, encoding="utf-8-sig"
         )
-    write_report(tables, summary, args.report)
+    write_report(tables, summary, args.report, model_name=args.model_name)
     print(f"rows: {summary['rows']:,}")
     print(f"MAE: {summary['mae']:.2f}")
     print(f"false negatives: {summary['false_negatives']:,}")
