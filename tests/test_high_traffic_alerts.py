@@ -70,6 +70,9 @@ def test_alert_evaluation_rejects_inconsistent_target_label() -> None:
 
 
 def test_model_alert_evaluation_ignores_test_rows() -> None:
-    result, details = evaluate_model_alerts(sample_features(), PredictionColumnModel())
+    result, details = evaluate_model_alerts(
+        sample_features(), PredictionColumnModel(), model_name="random_forest"
+    )
     assert result.loc[0, "rows"] == 3
+    assert result.loc[0, "model"] == "random_forest"
     assert details["rows"] == 3

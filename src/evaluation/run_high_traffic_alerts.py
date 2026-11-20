@@ -26,9 +26,17 @@ class AlertEvaluationError(ValueError):
     """경보 기준·정답·예측값이 서로 일치하지 않을 때 발생한다."""
 
 
+MODEL_LABELS = {
+    "hist_gradient_boosting": "HistGradientBoosting",
+    "random_forest": "Random Forest",
+}
+
+
 def evaluate_high_traffic_alerts(
     validation: pd.DataFrame,
     predicted_volume: object,
+    *,
+    model_name: str = "hist_gradient_boosting",
 ) -> tuple[pd.DataFrame, dict[str, int | float]]:
     required = {
         "target_volume",
@@ -63,7 +71,7 @@ def evaluate_high_traffic_alerts(
     result = pd.DataFrame(
         [
             {
-                "model": "hist_gradient_boosting",
+                "model": model_name,
                 "split": "validation",
                 "rows": len(validation),
                 "actual_high_volume": int(actual_label.sum()),
@@ -83,6 +91,8 @@ def evaluate_high_traffic_alerts(
 def evaluate_model_alerts(
     features: pd.DataFrame,
     model: VolumePredictor,
+    *,
+    model_name: str = "hist_gradient_boosting",
 ) -> tuple[pd.DataFrame, dict[str, int | float]]:
     """시험 구간을 건드리지 않고 검증 행만 모델에 전달한다."""
     required = {"split", "is_model_ready"}
@@ -95,7 +105,9 @@ def evaluate_model_alerts(
     if validation.empty:
         raise AlertEvaluationError("검증 구간에 경보 평가 가능한 행이 없습니다.")
     prediction = model.predict(validation)
-    return evaluate_high_traffic_alerts(validation, prediction)
+    return evaluate_high_traffic_alerts(
+        validation, prediction, model_name=model_name
+    )
 
 
 def write_report(
@@ -105,11 +117,12 @@ def write_report(
 ) -> None:
     report_path.parent.mkdir(parents=True, exist_ok=True)
     row = metrics.iloc[0]
-    report = f"""# 고교통량 경보 검증 결과
+    model_label = MODEL_LABELS.get(str(row["model"]), str(row["model"]))
+    report = f"""# {model_label} 고교통량 경보 검증 결과
 
 ## 평가 기준
 
-HistGradientBoosting이 예측한 교통량이 해당 접근로의 학습 구간 90백분위수를 초과하면 경보로 판단했다. PR-AUC 점수는 `예측 교통량 ÷ 접근로별 기준값`을 사용했다. 이 점수는 확률이 아니라 서로 다른 접근로의 기준을 맞춘 상대 위험 점수이다.
+{model_label}가 예측한 교통량이 해당 접근로의 학습 구간 90백분위수를 초과하면 경보로 판단했다. PR-AUC 점수는 `예측 교통량 ÷ 접근로별 기준값`을 사용했다. 이 점수는 확률이 아니라 서로 다른 접근로의 기준을 맞춘 상대 위험 점수이다.
 
 - 검증 행: {details['rows']:,}개
 - 실제 고교통량: {int(row['actual_high_volume']):,}건, {details['actual_positive_rate'] * 100:.2f}%
@@ -150,6 +163,7 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=Path("models/hist_gradient_boosting.joblib"),
     )
+    parser.add_argument("--model-name", default="hist_gradient_boosting")
     parser.add_argument(
         "--output",
         type=Path,
@@ -167,8 +181,7 @@ def main() -> int:
     args = build_parser().parse_args()
     if not args.model.exists():
         raise FileNotFoundError(
-            f"학습 모델이 없습니다: {args.model}. 먼저 "
-            "'python src/models/train_hist_gradient_boosting.py'를 실행하십시오."
+            f"학습 모델이 없습니다: {args.model}. 해당 모델 학습 명령을 먼저 실행하십시오."
         )
     features = pd.read_parquet(args.input)
     with warnings.catch_warnings():
@@ -179,7 +192,9 @@ def main() -> int:
             module=r"joblib\.externals\.loky\.backend\.context",
         )
         model = joblib.load(args.model)
-    metrics, details = evaluate_model_alerts(features, model)
+    metrics, details = evaluate_model_alerts(
+        features, model, model_name=args.model_name
+    )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     metrics.to_csv(args.output, index=False, encoding="utf-8-sig")
     write_report(metrics, details, args.report)

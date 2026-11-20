@@ -18,13 +18,14 @@
 - 고정 HistGradientBoosting 학습과 Ridge 대비 성능 비교
 - 계산량을 제한한 Random Forest와 기존 후보 성능 비교
 - 고교통량 경보 Precision·Recall·F1·PR-AUC 검증
+- Random Forest와 HistGradientBoosting의 경보 성능 비교
 - 교차로·시간대별 회귀 오차와 놓친 경보 사례 분석
 - 데이터·입력 변수 불변 조건을 확인하는 자동 테스트
 
 ## 아직 하지 않은 범위
 
 - 기상·공휴일 자료 결합
-- Random Forest 경보·오류 분석과 최종 모델 선정
+- Random Forest 세부 오류 분석과 최종 모델 선정
 - 실제 검증 성능 비교와 최종 모델 선정
 - FastAPI와 Streamlit 연결
 
