@@ -1,7 +1,3 @@
-"""frontend/api_client.py 자동 테스트.
-
-실제 HTTP 요청을 보내도록 로컬에 임시 서버를 띄워서 확인한다 (외부 의존성 없음).
-"""
 import json
 import sys
 import threading
@@ -11,7 +7,7 @@ from pathlib import Path
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "frontend"))
-import api_client as api  # noqa: E402
+import api_client as api
 
 OK_PREDICTION = {
     api.FIELD_RES_PREDICTION: 412.4,
@@ -22,7 +18,6 @@ OK_PREDICTION = {
 
 
 def start_server(routes):
-    """routes: {(method, path): (status, body)}. body가 str이면 그대로 보낸다."""
     received = []
 
     class Handler(BaseHTTPRequestHandler):
@@ -164,7 +159,6 @@ def test_predict_sends_target_timestamp(serve):
 
 
 def test_backend_readme_example_response(serve):
-    # backend/README.md의 /predict 응답 예시 그대로
     body = {"intersection": "도로원점3", "approach": "도로원점3_남",
             "target_timestamp": "2026-09-01T00:00:00", "predicted_volume": 193.502,
             "high_traffic_threshold": 1898.0, "high_traffic_alert": False, "risk_score": 0.102}
@@ -182,13 +176,12 @@ def test_predict_data_shortage_message(serve):
 
 
 def test_response_fields_match_model_handoff():
-    # docs/model_handoff.md 출력 규격
     assert (api.FIELD_RES_PREDICTION, api.FIELD_RES_THRESHOLD, api.FIELD_RES_ALERT,
             api.FIELD_RES_RISK) == ("predicted_volume", "high_traffic_threshold",
                                     "high_traffic_alert", "risk_score")
 
 
 def test_locations_endpoint_missing_message(serve):
-    url, _ = serve({})  # /locations 없음 -> 404
+    url, _ = serve({})
     with pytest.raises(api.ApiError, match="/locations\\)이 없습니다"):
         api.get_locations(url)
