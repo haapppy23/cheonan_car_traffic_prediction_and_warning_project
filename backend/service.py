@@ -229,7 +229,7 @@ class PredictionService:
             high_traffic_alert=predicted_volume > threshold,
             risk_score=predicted_volume / threshold,
         )
-    
+
     def get_locations(self) -> dict:
         """
         사용 가능한 교차로와 접근로 목록을 중복 없이 정렬하여 반환합니다.
