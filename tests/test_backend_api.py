@@ -117,3 +117,31 @@ def test_health_endpoint_reports_loaded_model() -> None:
     response = endpoint()
 
     assert response.model_dump() == {"status": "ok", "model": "random_forest"}
+
+def test_get_locations_service():
+    service = make_service()
+    locations_data = service.get_locations()
+
+    assert "locations" in locations_data
+    assert isinstance(locations_data["locations"], list)
+    assert len(locations_data["locations"]) > 0
+    assert locations_data["locations"][0]["intersection"] == "테스트4"
+    assert locations_data["locations"][0]["approaches"] == ["테스트4_동"]
+
+
+def test_get_locations_endpoint():
+    app = create_app(make_service())
+    endpoint = get_endpoint(app, "/locations", "GET")
+
+    response = endpoint(SimpleNamespace(app=app))
+
+    assert "locations" in response
+    assert isinstance(response["locations"], list)
+    assert response == {
+        "locations": [
+            {
+                "intersection": "테스트4",
+                "approaches": ["테스트4_동"],
+            }
+        ]
+    }

@@ -229,3 +229,24 @@ class PredictionService:
             high_traffic_alert=predicted_volume > threshold,
             risk_score=predicted_volume / threshold,
         )
+
+    def get_locations(self) -> dict:
+        """
+        사용 가능한 교차로와 접근로 목록을 중복 없이 정렬하여 반환합니다.
+        """
+        if not hasattr(self, "_history_by_location") or not self._history_by_location:
+            return {"locations": []}
+
+        # 딕셔너리의 (intersection, approach) 키에서 추출
+        locations_dict = {}
+        for inter, app in self._history_by_location.keys():
+            if inter not in locations_dict:
+                locations_dict[inter] = set()
+            locations_dict[inter].add(app)
+
+        result = [
+            {"intersection": inter, "approaches": sorted(list(apps))}
+            for inter, apps in sorted(locations_dict.items())
+        ]
+
+        return {"locations": result}

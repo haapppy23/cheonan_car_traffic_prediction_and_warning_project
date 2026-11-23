@@ -87,6 +87,12 @@ def create_app(service: PredictionService | None = None) -> FastAPI:
     def health() -> HealthResponse:
         return HealthResponse(status="ok", model="random_forest")
 
+    @application.get("/locations")
+    def get_locations(request: Request):
+        """지원하는 교차로 및 접근로 목록을 반환합니다."""
+        prediction_service: PredictionService = request.app.state.prediction_service
+        return prediction_service.get_locations()
+
     @application.post("/predict", response_model=PredictionResponse)
     def predict(payload: PredictionRequest, request: Request) -> PredictionResponse:
         prediction_service: PredictionService = request.app.state.prediction_service
