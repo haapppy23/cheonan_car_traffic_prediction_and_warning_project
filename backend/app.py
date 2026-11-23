@@ -106,3 +106,11 @@ def create_app(service: PredictionService | None = None) -> FastAPI:
 
 
 app = create_app()
+
+app = create_app()
+
+
+@app.get("/locations")
+def get_locations():
+    """ 지원하는 교차로 및 접근로 목록을 반환 """
+    return service.get_locations()

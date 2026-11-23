@@ -117,3 +117,36 @@ def test_health_endpoint_reports_loaded_model() -> None:
     response = endpoint()
 
     assert response.model_dump() == {"status": "ok", "model": "random_forest"}
+
+def test_get_locations_service():
+    import pandas as pd
+    from backend.service import PredictionService
+
+    dummy_history = pd.DataFrame({
+        "timestamp": pd.to_datetime(["2026-01-01 00:00:00", "2026-01-01 01:00:00"]),
+        "intersection": ["도로원점3", "도로원점3"],
+        "approach": ["도로원점3_남", "도로원점3_동"],
+        "volume": [100.0, 150.0]
+    })
+    
+    dummy_thresholds = pd.DataFrame({
+        "intersection": ["도로원점3", "도로원점3"],
+        "approach": ["도로원점3_남", "도로원점3_동"],
+        "high_traffic_threshold": [200.0, 200.0]
+    })
+    
+    ps = PredictionService(model=None, history=dummy_history, thresholds=dummy_thresholds)
+    locations_data = ps.get_locations()
+    
+    assert "locations" in locations_data
+    assert isinstance(locations_data["locations"], list)
+    assert len(locations_data["locations"]) > 0
+    assert locations_data["locations"][0]["intersection"] == "도로원점3"
+    assert locations_data["locations"][0]["approaches"] == ["도로원점3_남", "도로원점3_동"]
+
+
+def test_get_locations_endpoint():
+    from backend.app import app
+
+    route_paths = [getattr(route, "path", None) for route in app.routes]
+    assert "/locations" in route_paths
