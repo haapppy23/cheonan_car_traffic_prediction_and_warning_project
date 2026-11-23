@@ -10,10 +10,19 @@
     "hist_gradient_boosting",
     "random_forest"
   ],
-  "not_included_without_reproducible_result": [
-    "xgboost",
-    "catboost"
-  ],
+  "supplementary_validation_after_test": {
+    "candidates": [
+      "xgboost",
+      "catboost",
+      "random_forest_external"
+    ],
+    "test_split_reused": false,
+    "final_model_changed": false,
+    "reports": [
+      "docs/extended_model_comparison.md",
+      "docs/external_feature_experiment.md"
+    ]
+  },
   "parameters": {
     "n_estimators": 12,
     "max_depth": 18,

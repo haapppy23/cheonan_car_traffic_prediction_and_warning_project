@@ -14,7 +14,7 @@
 | 데이터 | 용도 |
 |---|---|
 | 천안시 스마트교차로 교통량 | 주 학습 데이터 |
-| 기상청 시간별 기상자료 | 기온, 강수량, 풍속 후보 변수 |
+| Open-Meteo 시간별 재분석 기상자료 | 기온, 강수량, 풍속 보충 실험 |
 | 공휴일 정보 | 평일, 주말, 공휴일 구분 |
 
 실제 데이터 파일은 저장소에 포함하지 않는다. 데이터 출처와 저장 규칙은 [data/README.md](data/README.md)에 기록한다.
@@ -73,13 +73,18 @@ docs/                 데이터·실험 설계와 담당자 설명서
 - Random Forest의 교차로·시간대별 오류 분석
 - Random Forest 최종 선정과 학습+검증 재학습
 - 2026년 6~8월 보관 시험 구간 1회 평가
+- XGBoost·CatBoost의 학습 구간 내부 Randomized Search와 추가 검증 비교
+- 최종 Random Forest의 검증 표본 SHAP 입력 변수 분석
+- 대한민국 공휴일과 천안 시간별 기온·강수량·풍속 결합
+- 동일 Random Forest 설정에서 외부 변수 추가 효과 검증
 - 백엔드·프론트엔드 전달용 모델 입출력 규격
 - FastAPI 모델·교통량 이력 1회 적재
 - 1시간 후 교통량과 고교통량 위험 예측 API
+- Streamlit 교차로·접근로 선택 화면과 FastAPI 연동
 - 전처리·EDA·입력 변수 자동 테스트
 - 데이터·실험 설계 문서와 데이터/ML 담당자 설명서
 
-데이터·머신러닝과 FastAPI 예측 서버까지 구현했다. Streamlit 담당자는 예측 API를 화면에 연결한다.
+데이터·머신러닝, FastAPI 예측 서버와 Streamlit 화면을 구현하고 실제 연동을 확인했다.
 
 ## 설치
 
@@ -169,6 +174,26 @@ python src/evaluation/run_error_analysis.py --model models/random_forest.joblib 
 python src/models/finalize_random_forest.py
 ```
 
+XGBoost와 CatBoost를 학습 구간 내부에서 탐색하고 공식 검증 구간에서 보충 비교한다.
+
+```bash
+python src/models/train_extended_models.py --n-iter 4
+```
+
+최종 Random Forest의 검증 표본 SHAP 중요도를 계산한다.
+
+```bash
+python src/evaluation/run_shap_analysis.py
+```
+
+천안 시간별 기상 자료를 받고 공휴일·기상을 결합한 보충 실험을 실행한다.
+
+```bash
+python src/data/download_cheonan_weather.py
+python src/features/build_external_features.py
+python src/models/run_external_feature_experiment.py
+```
+
 FastAPI 예측 서버를 실행한다. 요청 형식은 [backend/README.md](backend/README.md)에 정리했다.
 
 ```bash
@@ -205,4 +230,4 @@ python src/data/inspect_raw.py --input 원본.xlsx --date-column 날짜 --inters
 
 ## 다음 단계
 
-프론트엔드 담당자는 FastAPI의 `/predict` 응답에서 예상 교통량, 고교통량 기준과 위험 여부를 받아 Streamlit 화면에 표시한다.
+선택 기능은 실제 배포 환경 구성, 주기적 최신 교통량 적재와 Open-Meteo 재분석 기상을 실제 예보 입력으로 교체하는 작업이다. 현재 제출 범위의 데이터 처리, 모델 비교, 설명, API와 화면 연동은 완료했다.

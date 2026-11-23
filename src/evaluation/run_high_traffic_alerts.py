@@ -29,6 +29,8 @@ class AlertEvaluationError(ValueError):
 MODEL_LABELS = {
     "hist_gradient_boosting": "HistGradientBoosting",
     "random_forest": "Random Forest",
+    "xgboost": "XGBoost",
+    "catboost": "CatBoost",
 }
 
 
