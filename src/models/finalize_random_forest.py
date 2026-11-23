@@ -113,7 +113,7 @@ def write_final_report(summary: dict[str, float | int], report_path: Path) -> No
 
 최종 모델은 Random Forest로 고정했다. 시험 구간을 보기 전에 검증 구간에서 MAE·WAPE·RMSE와 Precision·Recall·F1·PR-AUC가 비교 후보 중 모두 가장 좋았기 때문이다. 모델 크기는 HistGradientBoosting보다 크지만 약 31.6MB로 FastAPI 서버에서 사용할 수 있는 범위라고 판단했다.
 
-저장소에 재현 가능한 결과가 없는 XGBoost와 CatBoost는 이번 최종 비교에 포함하지 않았다. 이후 추가 실험을 하더라도 아래 시험 결과를 보고 설정을 조정하지 않는다.
+최종 선정 당시에는 재현 가능한 결과가 없던 XGBoost와 CatBoost를 포함하지 않았다. 시험 결과를 확인한 뒤 수행한 보충 검증에서는 Random Forest의 검증 MAE 36.00이 XGBoost 37.70과 CatBoost 39.97보다 낮았다. 이 보충 결과는 아래 시험 결과를 이용한 재선정이나 재튜닝에 사용하지 않는다.
 
 ## 최종 학습
 
@@ -204,7 +204,15 @@ def write_metadata(
             "hist_gradient_boosting",
             "random_forest",
         ],
-        "not_included_without_reproducible_result": ["xgboost", "catboost"],
+        "supplementary_validation_after_test": {
+            "candidates": ["xgboost", "catboost", "random_forest_external"],
+            "test_split_reused": False,
+            "final_model_changed": False,
+            "reports": [
+                "docs/extended_model_comparison.md",
+                "docs/external_feature_experiment.md",
+            ],
+        },
         "parameters": {
             "n_estimators": 12,
             "max_depth": 18,
