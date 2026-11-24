@@ -54,6 +54,27 @@ def test_random_forest_fits_and_predicts_nonnegative_volume() -> None:
     assert (prediction >= 0).all()
 
 
+def test_random_forest_explains_single_prediction() -> None:
+    frame = sample_model_data()
+    train = select_ready_split(frame, "train")
+    validation = select_ready_split(frame, "validation")
+    model = RandomForestTrafficModel(n_estimators=5, max_depth=5).fit(
+        train, train["target_volume"]
+    )
+
+    factors = model.explain(validation.iloc[[0]], top_k=3)
+
+    assert len(factors) == 3
+    assert all(
+        set(factor) == {"feature", "label", "contribution", "effect"}
+        for factor in factors
+    )
+    assert all(factor["effect"] in {"increase", "decrease"} for factor in factors)
+    assert [abs(float(factor["contribution"])) for factor in factors] == sorted(
+        [abs(float(factor["contribution"])) for factor in factors], reverse=True
+    )
+
+
 def test_random_forest_rejects_missing_feature() -> None:
     frame = sample_model_data().drop(columns=[MODEL_FEATURES[0]])
     with pytest.raises(RandomForestValidationError, match="필요한 열"):

@@ -50,6 +50,13 @@ class PredictionRequest(BaseModel):
         return value
 
 
+class FeatureContributionResponse(BaseModel):
+    feature: str
+    label: str
+    contribution: float
+    effect: str
+
+
 class PredictionResponse(BaseModel):
     intersection: str
     approach: str
@@ -58,6 +65,7 @@ class PredictionResponse(BaseModel):
     high_traffic_threshold: float
     high_traffic_alert: bool
     risk_score: float
+    major_factors: list[FeatureContributionResponse]
 
 
 class HealthResponse(BaseModel):

@@ -16,10 +16,19 @@ FIELD_RES_THRESHOLD = "high_traffic_threshold"
 FIELD_RES_ALERT = "high_traffic_alert"
 FIELD_RES_RISK = "risk_score"
 FIELD_RES_TARGET_TIME = "target_timestamp"
+FIELD_RES_FACTORS = "major_factors"
 
 
 class ApiError(Exception):
     pass
+
+
+@dataclass
+class PredictionFactor:
+    feature: str
+    label: str
+    contribution: float
+    effect: str
 
 
 @dataclass
@@ -29,6 +38,7 @@ class Prediction:
     high_traffic_alert: bool
     risk_score: float
     target_time: str | None = None
+    major_factors: tuple[PredictionFactor, ...] = ()
 
 
 DIRECTION_WORDS = {"동": "동쪽", "서": "서쪽", "남": "남쪽", "북": "북쪽"}
@@ -142,12 +152,26 @@ def predict(intersection: str, approach: str, target_timestamp: str | None = Non
                            f"다른 접근로나 시각을 선택해 주세요. (서버 메시지: {reason})")
         raise ApiError(f"예측 서버의 응답에 필요한 값이 없습니다: {', '.join(missing)}")
     try:
+        raw_factors = data.get(FIELD_RES_FACTORS, [])
+        if not isinstance(raw_factors, list):
+            raise TypeError
+        factors = tuple(
+            PredictionFactor(
+                feature=str(item["feature"]),
+                label=str(item["label"]),
+                contribution=float(item["contribution"]),
+                effect=str(item["effect"]),
+            )
+            for item in raw_factors
+            if isinstance(item, dict)
+        )
         return Prediction(
             predicted_volume=float(data[FIELD_RES_PREDICTION]),
             threshold=float(data[FIELD_RES_THRESHOLD]),
             high_traffic_alert=bool(data[FIELD_RES_ALERT]),
             risk_score=float(data[FIELD_RES_RISK]),
             target_time=data.get(FIELD_RES_TARGET_TIME),
+            major_factors=factors,
         )
-    except (TypeError, ValueError):
+    except (KeyError, TypeError, ValueError):
         raise ApiError("예측 서버의 응답 값 형식이 올바르지 않습니다.")

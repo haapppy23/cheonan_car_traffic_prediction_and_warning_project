@@ -20,6 +20,16 @@ class FixedModel:
         self.last_features = features.copy()
         return np.array([self.prediction], dtype="float64")
 
+    def explain(self, features: pd.DataFrame, *, top_k: int = 3):
+        return [
+            {
+                "feature": "lag_1",
+                "label": "1시간 전 교통량",
+                "contribution": 24.5,
+                "effect": "increase",
+            }
+        ][:top_k]
+
 
 def make_service(hours: int = 168, prediction: float = 200.0) -> PredictionService:
     history = pd.DataFrame(
@@ -87,6 +97,14 @@ def test_predict_endpoint_returns_volume_and_alert() -> None:
         "high_traffic_threshold": 150.0,
         "high_traffic_alert": True,
         "risk_score": pytest.approx(4 / 3),
+        "major_factors": [
+            {
+                "feature": "lag_1",
+                "label": "1시간 전 교통량",
+                "contribution": 24.5,
+                "effect": "increase",
+            }
+        ],
     }
 
 

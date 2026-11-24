@@ -84,6 +84,18 @@ if st.button("예측하기", type="primary", use_container_width=True):
         horizontal=True, height=180,
     )
 
+    if result.major_factors:
+        st.subheader("이번 예측의 주요 영향 변수")
+        for factor in result.major_factors:
+            direction = "높이는" if factor.effect == "increase" else "낮추는"
+            st.write(
+                f"{factor.label}: 예상 교통량을 약 "
+                f"{abs(factor.contribution):,.0f}대 {direction} 방향으로 작용"
+            )
+        st.caption(
+            "SHAP은 모델의 계산 근거를 설명하며 실제 원인과 결과를 증명하지 않습니다."
+        )
+
 st.divider()
 st.caption("이 결과는 차량 통행량 기반의 고교통량 위험 신호이며, 속도·통행시간 자료가 없어 "
            "실제 정체를 확정하지 않습니다. 행사·사고 등 관측되지 않은 요인은 반영되지 않습니다.")

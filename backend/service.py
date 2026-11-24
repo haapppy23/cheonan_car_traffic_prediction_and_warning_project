@@ -33,6 +33,14 @@ class HistoryUnavailableError(PredictionServiceError):
 
 
 @dataclass(frozen=True)
+class FeatureContribution:
+    feature: str
+    label: str
+    contribution: float
+    effect: str
+
+
+@dataclass(frozen=True)
 class PredictionResult:
     intersection: str
     approach: str
@@ -41,6 +49,7 @@ class PredictionResult:
     high_traffic_threshold: float
     high_traffic_alert: bool
     risk_score: float
+    major_factors: tuple[FeatureContribution, ...]
 
 
 def _validate_required_columns(
@@ -220,6 +229,19 @@ class PredictionService:
         predicted_volume = float(self.model.predict(features)[0])
         if not np.isfinite(predicted_volume) or predicted_volume < 0:
             raise PredictionServiceError("모델이 유효하지 않은 교통량을 반환했습니다.")
+        explain = getattr(self.model, "explain", None)
+        major_factors: tuple[FeatureContribution, ...] = ()
+        if callable(explain):
+            raw_factors = explain(features, top_k=3)
+            major_factors = tuple(
+                FeatureContribution(
+                    feature=str(item["feature"]),
+                    label=str(item["label"]),
+                    contribution=float(item["contribution"]),
+                    effect=str(item["effect"]),
+                )
+                for item in raw_factors
+            )
         return PredictionResult(
             intersection=intersection,
             approach=approach,
@@ -228,6 +250,7 @@ class PredictionService:
             high_traffic_threshold=threshold,
             high_traffic_alert=predicted_volume > threshold,
             risk_score=predicted_volume / threshold,
+            major_factors=major_factors,
         )
 
     def get_locations(self) -> dict:
