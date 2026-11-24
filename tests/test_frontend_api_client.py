@@ -14,6 +14,14 @@ OK_PREDICTION = {
     api.FIELD_RES_THRESHOLD: 380.0,
     api.FIELD_RES_ALERT: True,
     api.FIELD_RES_RISK: 1.085,
+    api.FIELD_RES_FACTORS: [
+        {
+            "feature": "lag_1",
+            "label": "1시간 전 교통량",
+            "contribution": 31.2,
+            "effect": "increase",
+        }
+    ],
 }
 
 
@@ -102,6 +110,8 @@ def test_predict_ok_and_payload(serve):
     r = api.predict("불당사거리", "A", base_url=url)
     assert r.predicted_volume == 412.4 and r.threshold == 380.0
     assert r.high_traffic_alert is True and r.risk_score == pytest.approx(1.085)
+    assert r.major_factors[0].label == "1시간 전 교통량"
+    assert r.major_factors[0].contribution == pytest.approx(31.2)
     assert received[-1] == ("POST", "/predict",
                             {api.FIELD_REQ_INTERSECTION: "불당사거리", api.FIELD_REQ_APPROACH: "A"})
 

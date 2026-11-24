@@ -15,28 +15,12 @@ import shap
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from src.models.random_forest import RandomForestTrafficModel
+from src.models.random_forest import (
+    FEATURE_LABELS,
+    RandomForestTrafficModel,
+    clean_feature_names,
+)
 from src.models.ridge import MODEL_FEATURES
-
-
-FEATURE_LABELS = {
-    "target_month": "예측 월",
-    "target_is_weekend": "주말 여부",
-    "hour_sin": "예측 시각(sin)",
-    "hour_cos": "예측 시각(cos)",
-    "weekday_sin": "요일(sin)",
-    "weekday_cos": "요일(cos)",
-    "lag_1": "1시간 전 교통량",
-    "lag_2": "2시간 전 교통량",
-    "lag_3": "3시간 전 교통량",
-    "lag_24": "전날 같은 시각 교통량",
-    "lag_168": "전주 같은 시각 교통량",
-    "rolling_mean_3": "최근 3시간 평균",
-    "rolling_mean_6": "최근 6시간 평균",
-    "rolling_std_6": "최근 6시간 변동성",
-    "intersection": "교차로",
-    "approach": "접근로",
-}
 
 
 class ShapAnalysisError(ValueError):
@@ -66,17 +50,6 @@ def select_validation_sample(
     if "target_timestamp" in validation.columns:
         validation = validation.sort_values("target_timestamp", kind="stable")
     return validation.reset_index(drop=True)
-
-
-def clean_feature_names(raw_names: list[str] | np.ndarray) -> list[str]:
-    """ColumnTransformer 접두사를 발표에 쓰는 원래 열 이름으로 바꾼다."""
-    cleaned: list[str] = []
-    for raw_name in raw_names:
-        name = str(raw_name)
-        if "__" in name:
-            name = name.split("__", maxsplit=1)[1]
-        cleaned.append(name)
-    return cleaned
 
 
 def summarize_shap_values(

@@ -21,6 +21,7 @@
 - `high_traffic_threshold`: 선택한 접근로의 학습 구간 90백분위수
 - `high_traffic_alert`: `predicted_volume > high_traffic_threshold`
 - `risk_score`: `predicted_volume / high_traffic_threshold`
+- `major_factors`: 해당 예측의 Tree SHAP 절댓값 상위 세 변수와 기여 방향
 
 접근로별 기준값은 `data/processed/features/high_traffic_thresholds.csv`에서 읽는다.
 
@@ -30,3 +31,4 @@
 - 교차로·접근로 이름은 학습 데이터의 문자열을 그대로 사용한다.
 - 시험 결과를 서비스 화면에서 실시간 정확도로 표현하지 않는다.
 - 속도 자료가 없으므로 출력 명칭은 `정체 확정`이 아니라 `고교통량 위험`으로 사용한다.
+- SHAP 기여도는 모델 계산 근거이며 실제 원인이라고 표현하지 않는다.

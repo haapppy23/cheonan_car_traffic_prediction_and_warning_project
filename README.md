@@ -75,12 +75,14 @@ docs/                 데이터·실험 설계와 담당자 설명서
 - 2026년 6~8월 보관 시험 구간 1회 평가
 - XGBoost·CatBoost의 학습 구간 내부 Randomized Search와 추가 검증 비교
 - 최종 Random Forest의 검증 표본 SHAP 입력 변수 분석
+- 학습량·트리 깊이에 따른 학습·검증 오차와 Bias–Variance 점검
 - 대한민국 공휴일과 천안 시간별 기온·강수량·풍속 결합
 - 동일 Random Forest 설정에서 외부 변수 추가 효과 검증
 - 백엔드·프론트엔드 전달용 모델 입출력 규격
 - FastAPI 모델·교통량 이력 1회 적재
 - 1시간 후 교통량과 고교통량 위험 예측 API
 - Streamlit 교차로·접근로 선택 화면과 FastAPI 연동
+- 예측 건별 Tree SHAP 주요 영향 변수 세 개 표시
 - 전처리·EDA·입력 변수 자동 테스트
 - 데이터·실험 설계 문서와 데이터/ML 담당자 설명서
 
@@ -186,6 +188,12 @@ python src/models/train_extended_models.py --n-iter 4
 python src/evaluation/run_shap_analysis.py
 ```
 
+학습량과 트리 깊이에 따른 학습·검증 오차를 비교한다. 보관 시험 구간은 사용하지 않는다.
+
+```bash
+python src/evaluation/run_bias_variance_analysis.py
+```
+
 천안 시간별 기상 자료를 받고 공휴일·기상을 결합한 보충 실험을 실행한다.
 
 ```bash
@@ -230,4 +238,4 @@ python src/data/inspect_raw.py --input 원본.xlsx --date-column 날짜 --inters
 
 ## 다음 단계
 
-선택 기능은 실제 배포 환경 구성, 주기적 최신 교통량 적재와 Open-Meteo 재분석 기상을 실제 예보 입력으로 교체하는 작업이다. 현재 제출 범위의 데이터 처리, 모델 비교, 설명, API와 화면 연동은 완료했다.
+선택 기능은 실제 배포 환경 구성, 주기적 최신 교통량 적재와 Open-Meteo 재분석 기상을 실제 예보 입력으로 교체하는 작업이다. 현재 제출 범위의 데이터 처리, 모델 비교, Bias–Variance와 SHAP 설명, API와 화면 연동은 완료했다.
