@@ -22,6 +22,10 @@ OK_PREDICTION = {
             "effect": "increase",
         }
     ],
+    api.FIELD_RES_RECENT_TRAFFIC: [
+        {"timestamp": "2026-08-31T22:00:00", "volume": 350.0},
+        {"timestamp": "2026-08-31T23:00:00", "volume": 370.0},
+    ],
 }
 
 
@@ -112,6 +116,7 @@ def test_predict_ok_and_payload(serve):
     assert r.high_traffic_alert is True and r.risk_score == pytest.approx(1.085)
     assert r.major_factors[0].label == "1시간 전 교통량"
     assert r.major_factors[0].contribution == pytest.approx(31.2)
+    assert [point.volume for point in r.recent_traffic] == [350.0, 370.0]
     assert received[-1] == ("POST", "/predict",
                             {api.FIELD_REQ_INTERSECTION: "불당사거리", api.FIELD_REQ_APPROACH: "A"})
 

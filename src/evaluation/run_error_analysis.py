@@ -27,6 +27,9 @@ class ErrorAnalysisError(ValueError):
     """오류 분석 입력이나 예측값이 유효하지 않을 때 발생한다."""
 
 
+PRECIPITATION_COLUMN = "weather_precipitation"
+
+
 def summarize_regression_by(frame: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
     grouped = (
         frame.groupby(columns, observed=True)
@@ -77,18 +80,19 @@ def analyze_validation_errors(
         raise ErrorAnalysisError("검증 예측값의 행 수 또는 값이 유효하지 않습니다.")
     alert_metrics, alert_details = evaluate_high_traffic_alerts(validation, prediction)
 
-    analysis = validation[
-        [
-            "target_timestamp",
-            "intersection",
-            "approach",
-            "target_hour",
-            "target_is_weekend",
-            "target_volume",
-            "target_high_volume",
-            "high_traffic_threshold",
-        ]
-    ].copy()
+    analysis_columns = [
+        "target_timestamp",
+        "intersection",
+        "approach",
+        "target_hour",
+        "target_is_weekend",
+        "target_volume",
+        "target_high_volume",
+        "high_traffic_threshold",
+    ]
+    if PRECIPITATION_COLUMN in validation:
+        analysis_columns.append(PRECIPITATION_COLUMN)
+    analysis = validation[analysis_columns].copy()
     analysis["predicted_volume"] = prediction
     analysis["error"] = prediction - analysis["target_volume"]
     analysis["absolute_error"] = analysis["error"].abs()
@@ -99,6 +103,10 @@ def analyze_validation_errors(
     analysis["day_type"] = np.where(
         analysis["target_is_weekend"], "주말", "평일"
     )
+    if PRECIPITATION_COLUMN in analysis:
+        analysis["rain_status"] = np.where(
+            analysis[PRECIPITATION_COLUMN].gt(0), "강수", "비강수"
+        )
 
     positive = analysis.loc[analysis["target_high_volume"].eq(1)].copy()
     intersection_alerts = (
@@ -157,6 +165,13 @@ def analyze_validation_errors(
         "false_negatives": false_negatives,
         "largest_errors": largest_errors,
     }
+    if "rain_status" in analysis:
+        tables["rain_status"] = summarize_regression_by(
+            analysis, ["rain_status"]
+        )
+        tables["rain_largest_errors"] = analysis.loc[
+            analysis["rain_status"].eq("강수")
+        ].sort_values("absolute_error", ascending=False, kind="stable")
     return tables, summary
 
 
@@ -199,6 +214,31 @@ def write_report(
             f"{row.high_traffic_threshold:.1f} | {row.underprediction:.1f} |"
         )
 
+    rain_section = ""
+    if "rain_status" in tables:
+        rain_error_rows = []
+        for row in tables["rain_largest_errors"].head(10).itertuples():
+            rain_error_rows.append(
+                f"| {row.target_timestamp} | {row.intersection} | {row.approach} | "
+                f"{row.weather_precipitation:.1f} | {row.target_volume:.0f} | "
+                f"{row.predicted_volume:.1f} | {row.absolute_error:.1f} |"
+            )
+        rain_section = f"""
+## 강수 여부별 회귀 오차
+
+강수량이 0mm보다 큰 예측 시각을 `강수`로 구분했다. 기상값은 천안 중심 좌표의 시간별 재분석 자료이므로 각 교차로의 현장 관측값은 아니다.
+
+| 구분 | 행 | MAE | WAPE | RMSE | mean_error |
+|---|---:|---:|---:|---:|---:|
+{_regression_table(tables['rain_status'], 'rain_status')}
+
+## 강수 시 큰 오차 사례
+
+| 시각 | 교차로 | 접근로 | 강수량(mm) | 실제 | 예측 | 절대오차 |
+|---|---|---|---:|---:|---:|---:|
+{chr(10).join(rain_error_rows)}
+"""
+
     model_label = MODEL_LABELS.get(model_name, model_name)
     report = f"""# {model_label} 오류 분석
 
@@ -226,6 +266,8 @@ def write_report(
 | 구분 | 행 | MAE | WAPE | RMSE | mean_error |
 |---|---:|---:|---:|---:|---:|
 {_regression_table(tables['day_type'], 'day_type')}
+
+{rain_section}
 
 ## 교차로별 고교통량 탐지
 

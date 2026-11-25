@@ -17,6 +17,7 @@ FIELD_RES_ALERT = "high_traffic_alert"
 FIELD_RES_RISK = "risk_score"
 FIELD_RES_TARGET_TIME = "target_timestamp"
 FIELD_RES_FACTORS = "major_factors"
+FIELD_RES_RECENT_TRAFFIC = "recent_traffic"
 
 
 class ApiError(Exception):
@@ -32,6 +33,12 @@ class PredictionFactor:
 
 
 @dataclass
+class TrafficPoint:
+    timestamp: str
+    volume: float
+
+
+@dataclass
 class Prediction:
     predicted_volume: float
     threshold: float
@@ -39,6 +46,7 @@ class Prediction:
     risk_score: float
     target_time: str | None = None
     major_factors: tuple[PredictionFactor, ...] = ()
+    recent_traffic: tuple[TrafficPoint, ...] = ()
 
 
 DIRECTION_WORDS = {"동": "동쪽", "서": "서쪽", "남": "남쪽", "북": "북쪽"}
@@ -165,6 +173,17 @@ def predict(intersection: str, approach: str, target_timestamp: str | None = Non
             for item in raw_factors
             if isinstance(item, dict)
         )
+        raw_recent = data.get(FIELD_RES_RECENT_TRAFFIC, [])
+        if not isinstance(raw_recent, list):
+            raise TypeError
+        recent_traffic = tuple(
+            TrafficPoint(
+                timestamp=str(item["timestamp"]),
+                volume=float(item["volume"]),
+            )
+            for item in raw_recent
+            if isinstance(item, dict)
+        )
         return Prediction(
             predicted_volume=float(data[FIELD_RES_PREDICTION]),
             threshold=float(data[FIELD_RES_THRESHOLD]),
@@ -172,6 +191,7 @@ def predict(intersection: str, approach: str, target_timestamp: str | None = Non
             risk_score=float(data[FIELD_RES_RISK]),
             target_time=data.get(FIELD_RES_TARGET_TIME),
             major_factors=factors,
+            recent_traffic=recent_traffic,
         )
     except (KeyError, TypeError, ValueError):
         raise ApiError("예측 서버의 응답 값 형식이 올바르지 않습니다.")

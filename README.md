@@ -83,6 +83,8 @@ docs/                 데이터·실험 설계와 담당자 설명서
 - 1시간 후 교통량과 고교통량 위험 예측 API
 - Streamlit 교차로·접근로 선택 화면과 FastAPI 연동
 - 예측 건별 Tree SHAP 주요 영향 변수 세 개 표시
+- 예측 직전 24시간 교통량과 평상시 상위 10% 기준 추세 비교
+- 강수 여부별 검증 오차와 강수 시 큰 실패 사례 분석
 - 전처리·EDA·입력 변수 자동 테스트
 - 데이터·실험 설계 문서와 데이터/ML 담당자 설명서
 
@@ -167,7 +169,7 @@ python src/evaluation/run_error_analysis.py
 Random Forest의 세부 오류를 같은 기준으로 분석한다.
 
 ```bash
-python src/evaluation/run_error_analysis.py --model models/random_forest.joblib --model-name random_forest --output-dir data/processed/evaluation/random_forest_error_analysis --report docs/random_forest_error_analysis.md
+python src/evaluation/run_error_analysis.py --input data/processed/features/model_features_external.parquet --model models/random_forest.joblib --model-name random_forest --output-dir data/processed/evaluation/random_forest_error_analysis --report docs/random_forest_error_analysis.md
 ```
 
 고정된 최종 모델을 재학습하고 보관 시험 구간을 평가한다.
