@@ -84,6 +84,22 @@ if st.button("예측하기", type="primary", use_container_width=True):
         horizontal=True, height=180,
     )
 
+    if result.recent_traffic:
+        st.subheader("최근 24시간 교통량 추세")
+        trend = pd.DataFrame(
+            {
+                "실제 교통량": [point.volume for point in result.recent_traffic],
+                "평상시 상한": [result.threshold] * len(result.recent_traffic),
+            },
+            index=pd.to_datetime(
+                [point.timestamp for point in result.recent_traffic]
+            ),
+        )
+        st.line_chart(trend, height=240)
+        st.caption(
+            "예측 직전 24시간의 실제 교통량과 학습 기간 상위 10% 기준을 비교합니다."
+        )
+
     if result.major_factors:
         st.subheader("이번 예측의 주요 영향 변수")
         for factor in result.major_factors:

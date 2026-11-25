@@ -22,6 +22,7 @@
 - `high_traffic_alert`: `predicted_volume > high_traffic_threshold`
 - `risk_score`: `predicted_volume / high_traffic_threshold`
 - `major_factors`: 해당 예측의 Tree SHAP 절댓값 상위 세 변수와 기여 방향
+- `recent_traffic`: 예측 직전 24시간의 시각과 실제 교통량
 
 접근로별 기준값은 `data/processed/features/high_traffic_thresholds.csv`에서 읽는다.
 
@@ -32,3 +33,4 @@
 - 시험 결과를 서비스 화면에서 실시간 정확도로 표현하지 않는다.
 - 속도 자료가 없으므로 출력 명칭은 `정체 확정`이 아니라 `고교통량 위험`으로 사용한다.
 - SHAP 기여도는 모델 계산 근거이며 실제 원인이라고 표현하지 않는다.
+- 최근 추세는 백엔드가 반환한 `recent_traffic`을 사용하며 프론트엔드에서 별도로 이동 통계를 계산하지 않는다.

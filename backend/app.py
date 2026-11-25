@@ -57,6 +57,11 @@ class FeatureContributionResponse(BaseModel):
     effect: str
 
 
+class RecentTrafficPointResponse(BaseModel):
+    timestamp: datetime
+    volume: float
+
+
 class PredictionResponse(BaseModel):
     intersection: str
     approach: str
@@ -66,6 +71,7 @@ class PredictionResponse(BaseModel):
     high_traffic_alert: bool
     risk_score: float
     major_factors: list[FeatureContributionResponse]
+    recent_traffic: list[RecentTrafficPointResponse]
 
 
 class HealthResponse(BaseModel):

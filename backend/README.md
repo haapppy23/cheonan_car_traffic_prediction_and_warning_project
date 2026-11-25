@@ -64,6 +64,16 @@ Content-Type: application/json
   "high_traffic_threshold": 1898.0,
   "high_traffic_alert": false,
   "risk_score": 0.102,
+  "recent_traffic": [
+    {
+      "timestamp": "2026-08-31T22:00:00",
+      "volume": 240.0
+    },
+    {
+      "timestamp": "2026-08-31T23:00:00",
+      "volume": 210.0
+    }
+  ],
   "major_factors": [
     {
       "feature": "lag_1",
@@ -78,6 +88,8 @@ Content-Type: application/json
 저장되지 않은 교차로·접근로는 `404`, 예측 직전 168시간 이력이 완전하지 않으면 `422`를 반환한다. `high_traffic_alert`는 정체 확정이 아니라 평소 상위 10% 수준을 넘는 교통량 위험을 뜻한다.
 
 `major_factors`는 해당 예측에 대한 Tree SHAP 절댓값 상위 세 변수다. `contribution`은 예상 교통량을 높이거나 낮춘 모델 내부 기여량이며 실제 인과관계를 뜻하지 않는다.
+
+`recent_traffic`은 모델 입력 생성에 사용된 예측 직전 24시간의 실제 교통량이다. 화면은 이 값과 `high_traffic_threshold`를 함께 표시하며 프론트엔드에서 이력을 다시 계산하지 않는다.
 
 ### GET /locations
 사용 가능한 교차로 및 접근로 목록을 반환합니다.

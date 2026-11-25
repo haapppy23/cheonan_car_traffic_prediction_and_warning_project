@@ -105,6 +105,17 @@ def test_predict_endpoint_returns_volume_and_alert() -> None:
                 "effect": "increase",
             }
         ],
+        "recent_traffic": [
+            {
+                "timestamp": timestamp.isoformat(),
+                "volume": float(volume),
+            }
+            for timestamp, volume in zip(
+                pd.date_range("2026-01-07", periods=24, freq="h"),
+                range(145, 169),
+                strict=True,
+            )
+        ],
     }
 
 

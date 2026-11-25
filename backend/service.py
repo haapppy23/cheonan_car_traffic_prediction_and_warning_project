@@ -12,6 +12,7 @@ import pandas as pd
 
 
 REQUIRED_HISTORY_HOURS = 168
+RECENT_TREND_HOURS = 24
 HISTORY_COLUMNS = ["timestamp", "intersection", "approach", "volume"]
 THRESHOLD_COLUMNS = ["intersection", "approach", "high_traffic_threshold"]
 
@@ -41,6 +42,12 @@ class FeatureContribution:
 
 
 @dataclass(frozen=True)
+class RecentTrafficPoint:
+    timestamp: pd.Timestamp
+    volume: float
+
+
+@dataclass(frozen=True)
 class PredictionResult:
     intersection: str
     approach: str
@@ -50,6 +57,7 @@ class PredictionResult:
     high_traffic_alert: bool
     risk_score: float
     major_factors: tuple[FeatureContribution, ...]
+    recent_traffic: tuple[RecentTrafficPoint, ...]
 
 
 def _validate_required_columns(
@@ -242,6 +250,13 @@ class PredictionService:
                 )
                 for item in raw_factors
             )
+        recent_series = self._history_by_location[(intersection, approach)].loc[
+            lambda values: values.index < target
+        ].tail(RECENT_TREND_HOURS)
+        recent_traffic = tuple(
+            RecentTrafficPoint(timestamp=pd.Timestamp(timestamp), volume=float(volume))
+            for timestamp, volume in recent_series.items()
+        )
         return PredictionResult(
             intersection=intersection,
             approach=approach,
@@ -251,6 +266,7 @@ class PredictionService:
             high_traffic_alert=predicted_volume > threshold,
             risk_score=predicted_volume / threshold,
             major_factors=major_factors,
+            recent_traffic=recent_traffic,
         )
 
     def get_locations(self) -> dict:

@@ -32,6 +32,7 @@ def sample_features() -> pd.DataFrame:
             "target_high_volume": pd.Series([1, 0, 1, 1], dtype="Int8"),
             "high_traffic_threshold": [100, 100, 100, 100],
             "prediction": [110, 90, 95, 10_000],
+            "weather_precipitation": [0.0, 1.2, 0.5, 0.0],
         }
     )
 
@@ -64,10 +65,23 @@ def test_error_analysis_groups_intersection_metrics() -> None:
     assert intersection_a["mae"] == 10
 
 
+def test_error_analysis_groups_rain_and_collects_rain_failures() -> None:
+    tables, _ = analyze_validation_errors(sample_features(), PredictionColumnModel())
+
+    rain = tables["rain_status"].loc[
+        tables["rain_status"]["rain_status"].eq("강수")
+    ].iloc[0]
+    assert rain["rows"] == 2
+    assert tables["rain_largest_errors"].iloc[0]["intersection"] == "교차로B"
+
+
 def test_error_report_uses_selected_model_name(tmp_path) -> None:
     tables, summary = analyze_validation_errors(
         sample_features(), PredictionColumnModel()
     )
     report = tmp_path / "report.md"
     write_report(tables, summary, report, model_name="random_forest")
-    assert report.read_text(encoding="utf-8").startswith("# Random Forest 오류 분석")
+    text = report.read_text(encoding="utf-8")
+    assert text.startswith("# Random Forest 오류 분석")
+    assert "## 강수 여부별 회귀 오차" in text
+    assert "## 강수 시 큰 오차 사례" in text

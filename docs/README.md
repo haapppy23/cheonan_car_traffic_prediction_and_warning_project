@@ -12,7 +12,7 @@
 - `error_analysis.md`: 교차로·시간대별 오차와 놓친 고교통량 분석
 - `random_forest_results.md`: Random Forest와 기존 후보의 검증 비교
 - `random_forest_alert_results.md`: Random Forest의 고교통량 경보 지표
-- `random_forest_error_analysis.md`: Random Forest의 교차로·시간대별 오류
+- `random_forest_error_analysis.md`: Random Forest의 교차로·시간대·주말·강수 여부별 오류
 - `final_test_results.md`: 최종 모델 선정 근거와 보관 시험 구간 성능
 - `extended_model_comparison.md`: XGBoost·CatBoost Randomized Search와 추가 검증 비교
 - `shap_feature_importance.md`: 최종 Random Forest의 검증 표본 SHAP 변수 중요도
@@ -21,4 +21,5 @@
 - `external_feature_experiment.md`: 공휴일·기상 변수 추가 전후 Random Forest 비교
 - `model_handoff.md`: 백엔드·프론트엔드 전달용 모델 입출력 규격
 - `deployment_readiness.md`: 실제 클라우드 배포에 필요한 파일과 남은 결정
+- `proposal_fulfillment.md`: 제안서 약속의 구현 여부와 변경 사유
 - `team_handoff/`: GitHub 연결법, 팀원별 AI 프롬프트와 전달문
