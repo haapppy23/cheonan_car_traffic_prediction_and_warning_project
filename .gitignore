@@ -24,15 +24,29 @@ data/raw/*
 !data/raw/README.md
 data/interim/*
 !data/interim/README.md
+!data/interim/cheonan_traffic_wide_2024-01_2026-08.csv
 data/processed/*
 !data/processed/README.md
+!data/processed/selected_traffic_long.csv
+!data/processed/evaluation/
+data/processed/evaluation/*
+!data/processed/evaluation/extended_model_comparison.csv
+!data/processed/evaluation/extended_alert_comparison.csv
+!data/processed/evaluation/bias_variance_metrics.csv
+!data/processed/evaluation/shap_feature_importance.csv
+!data/processed/features/
+data/processed/features/*
+!data/processed/features/high_traffic_thresholds.csv
 data/external/*
 !data/external/README.md
+!data/external/cheonan_weather_hourly.csv
+!data/external/cheonan_weather_metadata.json
 
 # Model artifacts
 models/*
 !models/README.md
 *.joblib
+!models/final_random_forest.joblib
 *.pkl
 *.pickle
 
